@@ -4,7 +4,9 @@ import { AppService } from './app.service';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
-import { envKeys } from './common/const/env.const';
+import { envKeys } from './common/config/env.const';
+import { UsersModule } from './users/users.module';
+import { makeTypeOrmOptions } from './common/config/typeorm.options';
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { envKeys } from './common/const/env.const';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('development', 'prodduction').required(),
+        NODE_ENV: Joi.string().valid('development', 'production').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
         DB_USERNAME: Joi.string().required(),
@@ -21,18 +23,17 @@ import { envKeys } from './common/const/env.const';
       }),
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService): TypeOrmModuleOptions => ({
-        type: 'mysql',
-        host: config.get(envKeys.dbHost),
-        port: config.get(envKeys.dbPort),
-        username: config.get(envKeys.dbUsername),
-        password: config.get(envKeys.dbPassword),
-        database: config.get(envKeys.dbDatabase),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: config.get(envKeys.env) === 'dev',
-      }),
+      useFactory: (config: ConfigService): TypeOrmModuleOptions => {
+        const base = makeTypeOrmOptions(process.env);
+        return {
+          ...base,
+          synchronize: config.get(envKeys.env) === 'development',
+          migrationsRun: false,
+        };
+      },
       inject: [ConfigService],
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
