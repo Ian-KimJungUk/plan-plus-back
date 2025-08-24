@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
-import { envKeys } from './common/config/env.const';
 import { UsersModule } from './users/users.module';
 import { makeTypeOrmOptions } from './common/config/typeorm.options';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,18 +22,12 @@ import { makeTypeOrmOptions } from './common/config/typeorm.options';
         DB_DATABASE: Joi.string().required(),
       }),
     }),
-    TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService): TypeOrmModuleOptions => {
-        const base = makeTypeOrmOptions(process.env);
-        return {
-          ...base,
-          synchronize: config.get(envKeys.env) === 'development',
-          migrationsRun: false,
-        };
-      },
-      inject: [ConfigService],
+    TypeOrmModule.forRoot({
+      ...makeTypeOrmOptions(process.env),
+      migrationsRun: false,
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

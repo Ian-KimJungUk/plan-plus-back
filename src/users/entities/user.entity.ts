@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import { BaseTable } from 'src/common/entities/base-table.entity';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 export enum Role {
@@ -8,7 +9,7 @@ export enum Role {
 }
 
 @Entity({ name: 'tbUser' })
-export class User {
+export class User extends BaseTable {
   @PrimaryColumn()
   userId: string;
 
