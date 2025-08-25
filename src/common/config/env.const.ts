@@ -4,6 +4,8 @@ const dbPort = 'DB_PORT';
 const dbUsername = 'DB_USERNAME';
 const dbPassword = 'DB_PASSWORD';
 const dbDatabase = 'DB_DATABASE';
+const jwtAccessSecret = 'JWT_ACCESS_SECRET';
+const jwtRefreshSecret = 'JWT_REFRESH_SECRET';
 
 export const envKeys = {
   env,
@@ -12,4 +14,6 @@ export const envKeys = {
   dbUsername,
   dbPassword,
   dbDatabase,
+  jwtAccessSecret,
+  jwtRefreshSecret,
 };
