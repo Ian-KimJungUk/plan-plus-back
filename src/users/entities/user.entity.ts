@@ -1,7 +1,14 @@
 import { Exclude } from 'class-transformer';
 import { BaseTable } from '../../common/entities/base-table.entity';
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import { UserProvider } from './user-provider.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 export enum Role {
   admin = 'A',
@@ -16,17 +23,19 @@ export enum UserStatus {
 
 @Entity({ name: 'tbUser' })
 export class User extends BaseTable {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'char', length: 36 })
   userId: string;
+
+  @BeforeInsert()
+  generateId() {
+    this.userId = uuidv4();
+  }
 
   @Column({ nullable: true })
   email: string;
 
   @Column()
   name: string;
-
-  @Column({ nullable: true })
-  phone: string;
 
   @Column({
     type: 'varchar',

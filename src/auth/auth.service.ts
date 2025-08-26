@@ -5,18 +5,15 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
 import { envKeys } from 'src/common/config/env.const';
-import { UserProvider } from 'src/users/entities/user-provider.entity';
-import { User } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private readonly users: Repository<User>,
-    @InjectRepository(UserProvider)
-    private readonly userProvider: Repository<UserProvider>,
+    private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -91,5 +88,36 @@ export class AuthService {
     } catch (error) {
       throw new UnauthorizedException('토큰이 만료됐습니다');
     }
+  }
+
+  async signUp(dto: CreateUserDto) {
+    const user = await this.usersService.findOneByProviderId(dto.email);
+
+    if (user) {
+      throw new BadRequestException('이미 가입된 이메일입니다');
+    }
+
+    const hash = await bcrypt.hash(
+      dto.password,
+      this.configService.get<number>(envKeys.bcryptSaltRounds) || 0,
+    );
+
+    await this.usersService.create({
+      ...dto,
+      password: hash,
+    });
+
+    return await this.usersService.findOneByProviderId(dto.email);
+  }
+
+  async signIn(rawToken: string) {
+    const dto = this.parseBasicToken(rawToken);
+    const user = await this.usersService.findOneByProviderId(dto.email);
+
+    if (!user) {
+      throw new BadRequestException('가입되지 않은 이메일입니다');
+    }
+
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
   }
 }

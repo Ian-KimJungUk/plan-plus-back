@@ -4,16 +4,39 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthProvider, UserProvider } from './entities/user-provider.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
+    private readonly user: Repository<User>,
+    @InjectRepository(UserProvider)
+    private readonly userProvider: Repository<UserProvider>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    return await this.usersRepository.save(createUserDto);
+    await this.user.save({
+      ...createUserDto,
+      userProviders: [
+        {
+          provider: AuthProvider.local,
+          providerId: createUserDto.email,
+        },
+      ],
+    });
+  }
+
+  async findOneByProviderId(providerId: string) {
+    return await this.user
+      .createQueryBuilder('a')
+      .innerJoinAndSelect(
+        'a.userProviders',
+        'b',
+        'b.providerId = :providerId',
+        { providerId },
+      )
+      .getOne();
   }
 
   findAll() {

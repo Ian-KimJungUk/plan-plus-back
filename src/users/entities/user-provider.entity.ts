@@ -26,7 +26,7 @@ export class UserProvider extends BaseTable {
   @Column()
   providerId: string;
 
-  @ManyToOne(() => User, (user) => user.userId, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.userProviders, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 }

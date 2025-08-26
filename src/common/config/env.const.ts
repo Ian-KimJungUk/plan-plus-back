@@ -6,6 +6,7 @@ const dbPassword = 'DB_PASSWORD';
 const dbDatabase = 'DB_DATABASE';
 const jwtAccessSecret = 'JWT_ACCESS_SECRET';
 const jwtRefreshSecret = 'JWT_REFRESH_SECRET';
+const bcryptSaltRounds = 'BCRYPT_SALT_ROUNDS';
 
 export const envKeys = {
   env,
@@ -16,4 +17,5 @@ export const envKeys = {
   dbDatabase,
   jwtAccessSecret,
   jwtRefreshSecret,
+  bcryptSaltRounds,
 };

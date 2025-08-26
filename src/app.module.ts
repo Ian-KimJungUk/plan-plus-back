@@ -22,6 +22,7 @@ import { AuthModule } from './auth/auth.module';
         DB_DATABASE: Joi.string().required(),
         JWT_ACCESS_SECRET: Joi.string().required(),
         JWT_REFRESH_SECRET: Joi.string().required(),
+        BCRYPT_SALT_ROUNDS: Joi.number().required(),
       }),
     }),
     TypeOrmModule.forRoot({
