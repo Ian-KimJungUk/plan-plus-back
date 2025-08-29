@@ -12,7 +12,7 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  readonly email?: string;
+  readonly email: string;
 
   @IsNotEmpty()
   @IsString()

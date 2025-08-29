@@ -7,6 +7,7 @@ import * as Joi from 'joi';
 import { UsersModule } from './users/users.module';
 import { makeTypeOrmOptions } from './common/config/typeorm.options';
 import { AuthModule } from './auth/auth.module';
+import { OauthModule } from './oauth/oauth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    OauthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

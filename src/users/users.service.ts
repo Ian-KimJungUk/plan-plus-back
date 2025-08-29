@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User, UserStatus } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthProvider, UserProvider } from './entities/user-provider.entity';
 
@@ -20,23 +20,25 @@ export class UsersService {
       ...createUserDto,
       userProviders: [
         {
-          provider: AuthProvider.local,
+          provider: createUserDto.provider,
           providerId: createUserDto.email,
+          password: createUserDto.password,
         },
       ],
     });
     return await this.userRepository.save(user);
   }
 
-  async findOneByProviderId(providerId: string) {
+  async findOneByProviderId(provider: AuthProvider, providerId: string) {
     return await this.userRepository
       .createQueryBuilder('a')
       .innerJoinAndSelect(
         'a.userProviders',
         'b',
-        'b.providerId = :providerId',
-        { providerId },
+        'b.provider = :provider and b.providerId = :providerId',
+        { provider, providerId },
       )
+      .where('a.status = :status', { status: UserStatus.active })
       .getOne();
   }
 

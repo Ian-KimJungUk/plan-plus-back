@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { BaseTable } from '../../common/entities/base-table.entity';
+import { Exclude } from 'class-transformer';
 
 export enum AuthProvider {
   local = 'local',
@@ -25,6 +26,14 @@ export class UserProvider extends BaseTable {
 
   @Column()
   providerId: string;
+
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  @Exclude({ toPlainOnly: true })
+  password?: string | null;
 
   @ManyToOne(() => User, (user) => user.userProviders, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })

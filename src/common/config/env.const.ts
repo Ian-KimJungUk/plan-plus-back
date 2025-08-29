@@ -7,6 +7,10 @@ const dbDatabase = 'DB_DATABASE';
 const jwtAccessSecret = 'JWT_ACCESS_SECRET';
 const jwtRefreshSecret = 'JWT_REFRESH_SECRET';
 const bcryptSaltRounds = 'BCRYPT_SALT_ROUNDS';
+const jwtRefreshExpiresIn = 'JWT_REFRESH_EXPIRES_IN';
+const jwtAccessExpiresIn = 'JWT_ACESS_EXPIRES_IN';
+const kakaoClientId = 'KAKAO_CLIENT_ID';
+const kakaoRedirectUri = 'KAKAO_REDIRECT_URI';
 
 export const envKeys = {
   env,
@@ -18,4 +22,8 @@ export const envKeys = {
   jwtAccessSecret,
   jwtRefreshSecret,
   bcryptSaltRounds,
+  jwtRefreshExpiresIn,
+  jwtAccessExpiresIn,
+  kakaoClientId,
+  kakaoRedirectUri,
 };

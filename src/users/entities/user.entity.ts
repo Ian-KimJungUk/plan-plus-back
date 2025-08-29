@@ -37,14 +37,6 @@ export class User extends BaseTable {
   @Column()
   name: string;
 
-  @Column({
-    type: 'varchar',
-    length: 255,
-    nullable: true,
-  })
-  @Exclude({ toPlainOnly: true })
-  password?: string | null;
-
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.active })
   status: UserStatus;
 
