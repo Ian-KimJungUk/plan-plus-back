@@ -55,6 +55,8 @@ export class User extends BaseTable {
   })
   role: Role;
 
-  @OneToMany(() => UserProvider, (userProvider) => userProvider.user)
+  @OneToMany(() => UserProvider, (userProvider) => userProvider.user, {
+    cascade: ['insert'],
+  })
   userProviders: UserProvider[];
 }

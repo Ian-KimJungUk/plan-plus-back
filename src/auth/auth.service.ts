@@ -9,6 +9,7 @@ import { envKeys } from 'src/common/config/env.const';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { AuthProvider } from 'src/users/entities/user-provider.entity';
 
 @Injectable()
 export class AuthService {
@@ -91,23 +92,28 @@ export class AuthService {
   }
 
   async signUp(dto: CreateUserDto) {
-    const user = await this.usersService.findOneByProviderId(dto.email);
+    const user = await this.usersService.findOneByProviderId(dto.providerId);
 
     if (user) {
-      throw new BadRequestException('이미 가입된 이메일입니다');
+      throw new BadRequestException('이미 가입된 아이디입니다');
     }
 
-    const hash = await bcrypt.hash(
-      dto.password,
-      this.configService.get<number>(envKeys.bcryptSaltRounds) || 0,
-    );
+    let hash: string | undefined = undefined;
+    if (dto.provider === AuthProvider.local) {
+      if (!dto.password) {
+        throw new BadRequestException('비밀번호를 입력해주세요');
+      } else {
+        hash = await bcrypt.hash(
+          dto.password,
+          this.configService.get(envKeys.bcryptSaltRounds) || 10,
+        );
+      }
+    }
 
-    await this.usersService.create({
+    return await this.usersService.create({
       ...dto,
       password: hash,
     });
-
-    return await this.usersService.findOneByProviderId(dto.email);
   }
 
   async signIn(rawToken: string) {
@@ -118,6 +124,6 @@ export class AuthService {
       throw new BadRequestException('가입되지 않은 이메일입니다');
     }
 
-    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+    // const isPasswordValid = await bcrypt.compare(dto.password, user.userProviders);
   }
 }

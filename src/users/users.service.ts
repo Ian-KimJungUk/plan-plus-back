@@ -10,13 +10,13 @@ import { AuthProvider, UserProvider } from './entities/user-provider.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly user: Repository<User>,
+    private readonly userRepository: Repository<User>,
     @InjectRepository(UserProvider)
     private readonly userProvider: Repository<UserProvider>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    await this.user.save({
+    const user = this.userRepository.create({
       ...createUserDto,
       userProviders: [
         {
@@ -25,10 +25,11 @@ export class UsersService {
         },
       ],
     });
+    return await this.userRepository.save(user);
   }
 
   async findOneByProviderId(providerId: string) {
-    return await this.user
+    return await this.userRepository
       .createQueryBuilder('a')
       .innerJoinAndSelect(
         'a.userProviders',
