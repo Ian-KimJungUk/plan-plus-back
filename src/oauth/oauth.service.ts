@@ -3,20 +3,13 @@ import { KakaoAdapter } from './adapters/kakao.adapter';
 import { AuthProvider } from 'src/users/entities/user-provider.entity';
 import { OAuthAdapter } from './adapters/oauth.adapter';
 import { NaverAdapter } from './adapters/naver.adapter';
+import { GoogleAdapter } from './adapters/google.adapter';
 
 @Injectable()
 export class OauthService {
   private adapters = new Map<AuthProvider, OAuthAdapter>();
-  constructor(
-    kakao: KakaoAdapter,
-    naver: NaverAdapter,
-    // google: GoogleAdapter,
-  ) {
-    [
-      kakao,
-      naver,
-      // google,
-    ].forEach((adapter) => {
+  constructor(kakao: KakaoAdapter, naver: NaverAdapter, google: GoogleAdapter) {
+    [kakao, naver, google].forEach((adapter) => {
       this.adapters.set(adapter.provider, adapter);
     });
   }

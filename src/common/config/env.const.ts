@@ -29,4 +29,7 @@ export const envKeys = {
   naverClientId: 'NAVER_CLIENT_ID',
   naverRedirectUri: 'NAVER_REDIRECT_URI',
   naverClientSecret: 'NAVER_CLIENT_SECRET',
+  googleClientId: 'GOOGLE_CLIENT_ID',
+  googleClientSecret: 'GOOGLE_CLIENT_SECRET',
+  googleRedirectUri: 'GOOGLE_REDIRECT_URI',
 };
