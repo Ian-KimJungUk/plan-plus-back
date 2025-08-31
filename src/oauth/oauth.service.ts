@@ -2,18 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { KakaoAdapter } from './adapters/kakao.adapter';
 import { AuthProvider } from 'src/users/entities/user-provider.entity';
 import { OAuthAdapter } from './adapters/oauth.adapter';
+import { NaverAdapter } from './adapters/naver.adapter';
 
 @Injectable()
 export class OauthService {
   private adapters = new Map<AuthProvider, OAuthAdapter>();
   constructor(
     kakao: KakaoAdapter,
-    // naver: NaverAdapter,
+    naver: NaverAdapter,
     // google: GoogleAdapter,
   ) {
     [
       kakao,
-      // naver,
+      naver,
       // google,
     ].forEach((adapter) => {
       this.adapters.set(adapter.provider, adapter);

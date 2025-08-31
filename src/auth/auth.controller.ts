@@ -29,6 +29,10 @@ export class AuthController {
 
   @Post('social')
   async socialLogin(@Body() dto: { provider: AuthProvider; code: string }) {
+    if (dto.provider === AuthProvider.local) {
+      throw new BadRequestException('적절하지 않은 로그인 방식입니다');
+    }
+
     return await this.authService.socialLogin(dto);
   }
 

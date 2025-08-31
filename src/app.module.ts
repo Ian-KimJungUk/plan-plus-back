@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,7 +7,7 @@ import * as Joi from 'joi';
 import { UsersModule } from './users/users.module';
 import { makeTypeOrmOptions } from './common/config/typeorm.options';
 import { AuthModule } from './auth/auth.module';
-import { OauthModule } from './oauth/oauth.module';
+import { BearerTokenMiddleware } from './auth/middleware/bearer-token.middleware';
 
 @Module({
   imports: [
@@ -32,9 +32,12 @@ import { OauthModule } from './oauth/oauth.module';
     }),
     UsersModule,
     AuthModule,
-    OauthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(BearerTokenMiddleware).forRoutes('*');
+  }
+}

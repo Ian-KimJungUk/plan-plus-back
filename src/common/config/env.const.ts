@@ -26,4 +26,7 @@ export const envKeys = {
   jwtAccessExpiresIn,
   kakaoClientId,
   kakaoRedirectUri,
+  naverClientId: 'NAVER_CLIENT_ID',
+  naverRedirectUri: 'NAVER_REDIRECT_URI',
+  naverClientSecret: 'NAVER_CLIENT_SECRET',
 };

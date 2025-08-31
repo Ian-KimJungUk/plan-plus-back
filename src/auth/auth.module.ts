@@ -9,5 +9,6 @@ import { OauthModule } from 'src/oauth/oauth.module';
   imports: [UsersModule, JwtModule, OauthModule],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
