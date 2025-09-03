@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { makeTypeOrmOptions } from './common/config/typeorm.options';
 import { AuthModule } from './auth/auth.module';
 import { BearerTokenMiddleware } from './auth/middleware/bearer-token.middleware';
+import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BearerTokenMiddleware } from './auth/middleware/bearer-token.middleware
     }),
     UsersModule,
     AuthModule,
+    TodoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
