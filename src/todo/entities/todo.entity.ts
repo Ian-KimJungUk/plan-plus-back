@@ -1,5 +1,12 @@
+import { User } from '../../users/entities/user.entity';
 import { BaseTable } from '../../common/entities/base-table.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum TodoStatus {
   notStarted = 'A',
@@ -23,4 +30,8 @@ export class Todo extends BaseTable {
 
   @Column({ type: 'enum', enum: TodoStatus, default: TodoStatus.notStarted })
   status: TodoStatus;
+
+  @ManyToOne(() => User, (user) => user.todos, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  userId: User;
 }

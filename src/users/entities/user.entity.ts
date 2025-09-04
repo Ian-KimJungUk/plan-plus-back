@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import { BaseTable } from '../../common/entities/base-table.entity';
 import {
   BeforeInsert,
@@ -9,6 +8,7 @@ import {
 } from 'typeorm';
 import { UserProvider } from './user-provider.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { Todo } from '../../todo/entities/todo.entity';
 
 export enum Role {
   admin = 'A',
@@ -51,4 +51,7 @@ export class User extends BaseTable {
     cascade: ['insert'],
   })
   userProviders: UserProvider[];
+
+  @OneToMany(() => Todo, (todo) => todo.userId)
+  todos: Todo[];
 }
